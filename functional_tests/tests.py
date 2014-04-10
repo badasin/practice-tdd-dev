@@ -1,10 +1,11 @@
 
 from selenium import webdriver
-import unittest
+#import unittest
 ## addition
 from selenium.webdriver.common.keys import Keys
+from django.test import LiveServerTestCase
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase): # instead of <unittest.TestCase>
 
 	def setUp(self):
 		self.browser = webdriver.Firefox()
@@ -20,7 +21,8 @@ class NewVisitorTest(unittest.TestCase):
 		self.assertIn(row_text, [row.text for row in rows] )
 
 	def test_can_start_a_list_and_retrieve_it_later(self):
-		self.browser.get('http://localhost:8000')
+		#self.browser.get('http://localhost:8000')
+		self.browser.get(self.live_server_url)
 		self.assertIn('To-Do', self.browser.title)
 		
 		# header assertion
@@ -43,9 +45,11 @@ class NewVisitorTest(unittest.TestCase):
 		#as a reminder to finish the test
 		self.fail('Finish the test!')
 
+# removed because of LiveServerTestCase
+'''
 if __name__ == '__main__':
 	unittest.main(warnings='ignore')
-
+'''
 ### simple assertion
 '''
 browser = webdriver.Firefox()
