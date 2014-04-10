@@ -26,13 +26,17 @@ class NewVisitorTest(unittest.TestCase):
 				'Enter a to-do item')
 		inputbox.send_keys('Buy peacock feathers')
 		inputbox.send_keys(Keys.ENTER) # import Keys
-
+		
 		table = self.browser.find_element_by_id('id_list_table')
 		rows = table.find_elements_by_tag_name('tr')
-		self.assertTrue(
-				any(row.text == '1: Buy peacock feathers' for row in rows),
-				"New to-do item did not appear in table")
-		
+		#self.assertTrue(
+		#		any(row.text == '1: Buy peacock feathers' for row in rows),
+		#		"New to-do item did not appear in table -- its text was:\n{}".format(table.text) )
+		# revised and modified
+		self.assertIn('1: Buy peacock feathers', [row.text for row in rows])
+		self.assertIn('2: Use peacock feather to make a fly', 
+				[row.text for row in rows] )
+
 		# as a reminder to finish the test
 		self.fail('Finish the test!')
 
