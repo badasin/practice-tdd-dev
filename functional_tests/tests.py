@@ -65,7 +65,7 @@ class NewVisitorTest(LiveServerTestCase): # instead of <unittest.TestCase>
 		self.assertIn('Buy milk', page_text)
 		
 		#as a reminder to finish the test
-		self.fail('Finish the test!')
+		#self.fail('Finish the test!')
 
 # removed because of LiveServerTestCase
 '''
