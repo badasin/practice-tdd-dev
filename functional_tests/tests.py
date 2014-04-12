@@ -3,9 +3,11 @@ from selenium import webdriver
 #import unittest
 ## addition
 from selenium.webdriver.common.keys import Keys
-from django.test import LiveServerTestCase
+#from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerCase
 
-class NewVisitorTest(LiveServerTestCase): # instead of <unittest.TestCase>
+class NewVisitorTest(StaticLiveServerCase): 
+	# instead of <unittest.TestCase>
 
 	def setUp(self):
 		self.browser = webdriver.Firefox()
