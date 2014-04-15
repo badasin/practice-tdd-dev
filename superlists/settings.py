@@ -27,7 +27,7 @@ DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 # Needed when DEBUG=False
-ALLOWED_HOSTS = ['dev.badasin.com']
+ALLOWED_HOSTS = ['dev.badasin.com', '127.0.0.1']
 
 
 # Application definition
