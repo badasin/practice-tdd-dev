@@ -27,7 +27,7 @@ DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 # Needed when DEBUG=False
-ALLOWED_HOSTS = ['dev.badasin.com', '127.0.0.1']
+ALLOWED_HOSTS = ['dev.badasin.com']
 
 
 # Application definition
@@ -40,7 +40,27 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 		'lists',
+		'accounts',
 )
+
+# new for authentication
+AUTH_USER_MODEL = 'accounts.ListUser'
+AUTHENTICATION_BACKENDS = (
+		'accounts.authentication.PersonaAuthenticationBackend',
+)
+
+LOGGING = {
+	'version': 1,
+	'disable_existing_loggers': False,
+	'handlers': {
+			'console': 'DEBUG',
+			'class': 'logging.StreamHandler',
+	},
+	'loggers': {
+			'django': { 'handlers': ['console'], },
+	},
+	'root': { 'level': 'INFO' },
+}
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
