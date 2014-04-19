@@ -44,10 +44,10 @@ INSTALLED_APPS = (
 )
 
 # new for authentication
-#AUTH_USER_MODEL = 'accounts.ListUser'
-#AUTHENTICATION_BACKENDS = (
-#		'accounts.authentication.PersonaAuthenticationBackend',
-#)
+AUTH_USER_MODEL = 'accounts.User'
+AUTHENTICATION_BACKENDS = (
+		'accounts.authentication.PersonaAuthenticationBackend',
+)
 
 LOGGING = {
 	'version': 1,
