@@ -26,8 +26,9 @@ DEBUG = False
 #TEMPLATE_DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+DOMAIN = "localhost"
 # Needed when DEBUG=False
-ALLOWED_HOSTS = ['dev.badasin.com']
+ALLOWED_HOSTS = [DOMAIN, 'dev.badasin.com']
 
 
 # Application definition

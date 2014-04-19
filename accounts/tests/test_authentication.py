@@ -1,8 +1,8 @@
 from mock import patch
 from django.test import TestCase
-
+from django.conf import settings
 from accounts.authentication import (
-		PERSONA_VERIFY_URL, DOMAIN, PersonaAuthenticationBackend
+		PERSONA_VERIFY_URL, PersonaAuthenticationBackend
 )
 from django.contrib.auth import get_user_model
 
@@ -35,16 +35,16 @@ class AuthenticateTest(TestCase):
 
 	def setUp(self):
 		self.backend = PersonaAuthenticationBackend()
-		#user = User(email='other@user.com')
-		#user.name = 'otheruser'
-		#user.save()
-		#User.objects.create(email='other@user.com')
+		user = User(email='other@user.com')
+		user.name = 'otheruser'
+		user.save()
+		User.objects.create(email='other@user.com')
 
 	def test_sends_assertion_to_Mozilla_with_domain(self, mock_post):
 		self.backend.authenticate('an assertion')
 		mock_post.assert_called_once_with(
 				PERSONA_VERIFY_URL,
-				data={'assertion': 'an assertion', 'audience': DOMAIN }
+				data={'assertion': 'an assertion', 'audience': settings.DOMAIN }
 		)
 	
 	def test_returns_None_if_response_errors(self, mock_post):
