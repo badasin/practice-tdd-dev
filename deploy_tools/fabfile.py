@@ -3,7 +3,7 @@ from fabric.contrib.files import append, exists, sed
 from fabric.api import env, local, run
 import random
 
-REPO_URL = 'https://github.com/.../my-location.git'
+REPO_URL = 'https://github.com/badasin/practice-tdd-dev.git'
 
 def deploy():
 	site_folder = '/home/%s/html/%s' % (env.user, env.host)
@@ -20,7 +20,7 @@ def _create_directory_structure_if_necessary(site_folder):
 		run('mkdir -p %s/%s' % (site_folder, subfolder))
 
 def _get_latest_source(source_folder):
-	if exists(source_folder + '/source'):
+	if exists(source_folder):
 		run('cd %s && git fetch' % (source_folder,))
 	else:
 		run('git clone %s %s' % (REPO_URL, source_folder))
@@ -46,9 +46,9 @@ def _update_virtualenv(source_folder):
 	run('%s/bin/pip install -r %s/requirements.txt' % (
 		virtualenv_folder, source_folder))
 
-def _update_static_filed(source_folder):
+def _update_static_files(source_folder):
 	run(
-		'cd %s && ../virtualenv/bin/python3 manage.py collectstatic --noimput' % (source_folder,))
+		'cd %s && ../virtualenv/bin/python3 manage.py collectstatic --noiput' % (source_folder,))
 
 def _update_database(source_folder):
 	run('cd %s && ../virtualenv/bin/python3 manage.py migrate --noinput' % (
