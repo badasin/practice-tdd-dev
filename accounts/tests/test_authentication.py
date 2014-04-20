@@ -5,6 +5,7 @@ from accounts.authentication import (
 		PERSONA_VERIFY_URL, PersonaAuthenticationBackend
 )
 from django.contrib.auth import get_user_model
+import logging
 
 User = get_user_model()
 
@@ -21,8 +22,10 @@ class GetUserTest(TestCase):
 	@patch('accounts.authentication.User.objects.get')
 	def test_returns_None_if_user_does_not_exist(self,
 			mock_User_get):
+		
 		def raise_no_user_error(*_, **__):
 			raise User.DoesNotExist()
+		
 		mock_User_get.side_effect = raise_no_user_error
 		backend = PersonaAuthenticationBackend()
 		self.assertIsNone(backend.get_user('a@b.com'))
@@ -72,5 +75,21 @@ class AuthenticateTest(TestCase):
 		found_user = self.backend.authenticate('an assertion')
 		new_user = User.objects.get(email='a@b.com')
 		self.assertEqual(found_user, new_user)
+
+	def test_logs_non_okay_responses_from_persona(self, mock_post):
+		response_json = {
+				'status': 'not okay', 'reason': 'eg. audience mismatch',
+		}
+		mock_post.return_value.ok = True
+		mock_post.return_value.json.return_value = response_json
+
+		logger = logging.getLogger('accounts.authentication')
+		with patch.object(logger, 'warning') as mock_log_warning:
+			self.backend.authenticate('an assertion')
+
+		mock_log_warning.assert_called_once_with(
+				'Persona says NO. JSON was: {}'.format(response_json)
+		)
+
 
 
