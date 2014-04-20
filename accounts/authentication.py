@@ -8,10 +8,14 @@ User = get_user_model()
 class PersonaAuthenticationBackend(object):
 
 	def authenticate(self, assertion):
+		# on the server
+		#logging.warning('entering authenticate function')
 		response = requests.post(
 				PERSONA_VERIFY_URL,
 				data={ 'assertion': assertion, 'audience': settings.DOMAIN }
 		)
+		#logging.warning('got response from person')
+		#loggign.warning(response.content.decode())
 		if response.ok and response.json()['status'] == 'okay':
 			email = response.json()['email']
 			try:

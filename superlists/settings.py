@@ -28,7 +28,7 @@ TEMPLATE_DEBUG = DEBUG
 
 DOMAIN = "localhost"
 # Needed when DEBUG=False
-ALLOWED_HOSTS = [DOMAIN, 'dev.badasin.com']
+ALLOWED_HOSTS = [DOMAIN]
 
 
 # Application definition
@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 		'lists',
 		'accounts',
+		'functional_tests',
 )
 
 # new for authentication
