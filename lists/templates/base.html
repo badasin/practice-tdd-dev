@@ -25,19 +25,23 @@
 		{% endif %}
 	</nav>
 	
-	<div class="text-center">
-		<h1>{% block header_text %}{% endblock %}</h1>
-		{% block list_form %}
-		<form method="POST" action="{% block form_action %}{% endblock %}">
-			{{ form.text }}
-			{% csrf_token %}
-			{% if form.errors %}
-			<div class="form-group has-error">
-				<div class="help-block">{{ form.text.errors }}</div>
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3 jumbotron">
+			<div class="text-center">
+				<h1>{% block header_text %}{% endblock %}</h1>
+				{% block list_form %}
+					<form method="POST" action="{% block form_action %}{% endblock %}">
+						{{ form.text }}
+						{% csrf_token %}
+						{% if form.errors %}
+							<div class="form-group has-error">
+								<div class="help-block">{{ form.text.errors }}</div>
+							</div>
+						{% endif %}
+					</form>
+				{% endblock %}
 			</div>
-			{% endif %}
-		</form>
-		{% endblock %}
+		</div>
 	</div>
 
 	<div class="row">
@@ -74,7 +78,10 @@
 		Superlists.Accounts.initialize(navigator, user, token, urls);
 	});
 </script>
+
+
 <script>
+/**
 	$(document).ready(function() {
 		var loginLink = document.getElementById('login');
 		if (loginLink) {
@@ -109,6 +116,7 @@
 		});
 
 	});
+**/
 </script>
 
 </body>

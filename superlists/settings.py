@@ -51,29 +51,6 @@ AUTHENTICATION_BACKENDS = (
 		'accounts.authentication.PersonaAuthenticationBackend',
 )
 
-LOGGING = {
-	'version': 1,
-	'disable_existing_loggers': False,
-	'handlers': {
-			'console': {
-				'level': 'DEBUG',
-				'class': 'logging.StreamHandler',
-			},
-	},
-	'loggers': {
-			'django': { 
-					'handlers': ['console'], 
-			},
-			'accounts': {
-					'handlers': ['console'],
-			},
-			'lists': {
-					'handlers': ['console'],
-			},
-	},
-	'root': { 'level': 'INFO' },
-}
-
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -122,4 +99,28 @@ STATIC_ROOT = os.path.join(BASE_DIR, '../static')
 STATICFILES_DIRS = (
 		os.path.join(BASE_DIR, 'superlists', 'static'),
 )
+
+LOGGING = {
+	'version': 1,
+	'disable_existing_loggers': False,
+	'handlers': {
+			'console': {
+				'level': 'DEBUG',
+				'class': 'logging.StreamHandler',
+			},
+	},
+	'loggers': {
+			'django': { 
+					'handlers': ['console'], 
+			},
+			'accounts': {
+					'handlers': ['console'],
+			},
+			'lists': {
+					'handlers': ['console'],
+			},
+	},
+	'root': { 'level': 'INFO' },
+}
+
 

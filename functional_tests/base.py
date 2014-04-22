@@ -1,9 +1,14 @@
+import sys
 
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from django.contrib.staticfiles.testing import StaticLiveServerCase
-import sys
+from django.conf import settings
+
 from .server_tools import reset_database
+from .server_tools import create_session_on_server
+from .management.commands.create_session import create_pre_authenticated_session
+
 
 
 class FunctionalTest(StaticLiveServerCase): 
@@ -65,5 +70,19 @@ class FunctionalTest(StaticLiveServerCase):
 		navbar = self.browser.find_element_by_css_selector('.navbar')
 		self.assertNotIn(email, navbar.text)
 	
-
+	def create_pre_authenticated_session(self, email):
+		if self.against_staging:
+			session_key = create_session_on_server(self.server_host, email)
+		else:
+			session_key = create_pre_authenticated_session(email)
+				
+		## to set a cookie we neer to first visit the domain.
+		## 404 pages load the quickest!
+		self.browser.get(self.server_url + "/404_no_such_url/")
+		self.browser.add_cookie(dict(
+			name=settings.SESSION_COOKIE_NAME,
+			value=session_key,
+			path='/',
+		))
+	
 
