@@ -1,9 +1,12 @@
 import sys
 import os
+import time
 from datetime import datetime
 
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import WebDriverException
+
 from django.contrib.staticfiles.testing import StaticLiveServerCase
 from django.conf import settings
 
@@ -14,7 +17,7 @@ from .management.commands.create_session import create_pre_authenticated_session
 SCREEN_DUMP_LOCATION = os.path.abspath(
 		os.path.join(os.path.dirname(__file__), 'screendump')
 )
-
+DEFAULT_WAIT = 5
 
 class FunctionalTest(StaticLiveServerCase): 
 	# instead of <unittest.TestCase>
@@ -40,7 +43,7 @@ class FunctionalTest(StaticLiveServerCase):
 		if self.against_staging:
 			reset_database(self.server_host)
 		self.browser = webdriver.Firefox()
-		self.browser.implicitly_wait(3) # it won't work on every case
+		self.browser.implicitly_wait(DEFAULT_WAIT) # it won't work on every case
 	
 	def tearDown(self):
 		# to get a screenshot
@@ -68,7 +71,7 @@ class FunctionalTest(StaticLiveServerCase):
 			f.write(self.browser.page_source)
 	
 	def _get_filename(self):
-		timestamp = datetime.now().isoformat().replace(':', '')
+		timestamp = datetime.now().isoformat().replace(':', '.')[:19]
 		return '{folder}/{classname}.{method}-window{windowid}-{timestamp}'.format(
 				folder=SCREEN_DUMP_LOCATION,
 				classname=self.__class__.__name__,
@@ -76,7 +79,17 @@ class FunctionalTest(StaticLiveServerCase):
 				windowid=self._windowid,
 				timestamp=timestamp
 		)
-
+	
+	def wait_for(self, function_with_assertion, timeout=DEFAULT_WAIT):
+		'''WebdriverWait of Selenium is a little restrictive'''
+		start_time = time.time()
+		while time.time() - start_time < timeout:
+			try:
+				return function_with_assertion()
+			except (AssertionError, WebDriverException):
+				time.sleep(0.1)
+		# one more try, which will raise any errors if they are outstanding
+		return function_with_assertion()
 
 	def check_for_row_in_list_table(self, row_text):
 		table = self.browser.find_element_by_id('id_list_table')
