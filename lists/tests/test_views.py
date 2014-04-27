@@ -5,7 +5,7 @@ from django.core.urlresolvers import resolve
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.utils.html import escape
-from lists.views import new_list, new_list2
+from lists.views import new_list
 from lists.models import Item, List
 from lists.forms import (
 		ItemForm, EMPTY_LIST_ERROR, DUPLICATE_ITEM_ERROR, 
@@ -41,13 +41,13 @@ class NewListViewUnitTest(unittest.TestCase):
 	def test_saves_form_with_owner_if_form_valid(self, mockNewListForm):
 		mock_form = mockNewListForm.return_value
 		mock_form.is_valid.return_value = True
-		new_list2(self.request)
+		new_list(self.request) #
 		mock_form.save.assert_called_once_with(owner=self.request.user)
 	
 	def test_does_not_save_if_form_invalid(self, mockNewListForm):
 		mock_form = mockNewListForm.return_value
 		mock_form.is_valid.return_value = False
-		new_list2(self.request)
+		new_list(self.request) #
 		self.assertFalse(mock_form.save.called)
 
 	@patch('lists.views.redirect')
@@ -55,7 +55,7 @@ class NewListViewUnitTest(unittest.TestCase):
 			self, mock_redirect, mockNewListForm):
 		mock_form = mockNewListForm.return_value
 		mock_form.is_valid.return_value = True
-		response = new_list2(self.request)
+		response = new_list(self.request) #
 		self.assertEqual(response, mock_redirect.return_value)
 		mock_redirect.assert_called_once_with(mock_form.save.return_value)
 	
@@ -64,7 +64,7 @@ class NewListViewUnitTest(unittest.TestCase):
 			self, mock_render, mockNewListForm):
 		mock_form = mockNewListForm.return_value
 		mock_form.is_valid.return_value = False
-		response = new_list2(self.request)
+		response = new_list(self.request) #
 		self.assertEqual(response, mock_render.return_value)
 		mock_render.assert_called_once_with(
 				self.request, 'home.html', {'form': mock_form}
@@ -232,31 +232,24 @@ class MyListsTest(TestCase):
 	
 
 
+class ShareListTest(TestCase):
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	def test_sharing_a_list_via_POST(self):
+		sharee = User.objects.create(email='share.with@me.com')
+		list_ = List.objects.create()
+		self.client.post(
+				'/lists/%d/share' % (list_.id),
+				{'email': 'share.with@me.com'}
+		)
+		self.assertIn(sharee, list_.shared_with.all())
+	
+	def test_redirects_after_POST(self):
+		sharee = User.objects.create(email='share.with@me.com')
+		list_ = List.objects.create()
+		response = self.client.post(
+				'/lists/%d/share' % (list_.id),
+				{'email': 'share.with@me.com'}
+		)
+		self.assertRedirects(response, list_.get_absolute_url())
 
 

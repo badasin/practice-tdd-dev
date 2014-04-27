@@ -11,7 +11,7 @@ class HomePage(object):
 		return self
 
 	def get_item_input(self):
-		return self.test.browser.find_element_by_id('id_text')
+		return self.test.browser.find_element_by_id(ITEM_INPUT_ID)
 
 	def start_new_list(self, item_text):
 		self.go_to_home_page()
@@ -25,11 +25,9 @@ class HomePage(object):
 		self.test.browser.find_element_by_link_text('My lists').click()
 		self.test.wait_for(lambda: self.test.assertEqual(
 			self.test.browser.find_element_by_tag_name('h1').text,
-			'My lists'
+			'My Lists'
 		))
 	
-	def get_item_input(self):
-		return self.test.browser.find_element_by_id(ITEM_INPUT_ID)
 
 
 
@@ -56,7 +54,7 @@ class ListPage(object):
 		)
 	
 	def get_shared_with_list(self):
-		return self.test.browser.find_element_by_css_selector('.list-share')
+		return self.test.browser.find_elements_by_css_selector('.list-sharee')
 
 	def share_list_with(self, email):
 		self.get_share_box().send_keys(email + '\n')
@@ -66,7 +64,7 @@ class ListPage(object):
 		))
 	
 	def get_item_input(self):
-		return self.test.browser.find_element_by_id('id_list_owner')
+		return self.test.browser.find_element_by_id(ITEM_INPUT_ID)
 
 	def add_new_item(self, item_text):
 		current_pos = len(self.get_list_table_rows())
@@ -74,8 +72,6 @@ class ListPage(object):
 		self.wait_for_new_item_in_list(item_text, current_pos + 1)
 	
 	def get_list_owner(self):
-		return self.text.browser.find_element_by_id('id_list_owner')
-
-
+		return self.test.browser.find_element_by_id('id_list_owner').text
 
 
